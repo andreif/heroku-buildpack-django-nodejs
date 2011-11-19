@@ -71,8 +71,10 @@ echo "-----> Installing dependencies with npm $NPM_VERSION"
 cd $BUILD_DIR
 #HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install 2>&1 | indent
 for pkg in $(cat requirements.npm); do
-    echo $pkg
-    HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install $pkg 2>&1 | indent
+    # TODO: read line by line and skip empty
+    if [[ ! $(echo pkg) = '#'* ]]; then
+        HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install $pkg 2>&1 | indent
+    fi
 done
 
 if [ "${PIPESTATUS[*]}" != "0 0" ]; then

@@ -69,7 +69,12 @@ fi
 # install dependencies with npm
 echo "-----> Installing dependencies with npm $NPM_VERSION"
 cd $BUILD_DIR
-HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install 2>&1 | indent
+#HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install 2>&1 | indent
+for pkg in $(cat requirements.npm); do
+    echo $pkg
+    HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install $pkg 2>&1 | indent
+done
+
 if [ "${PIPESTATUS[*]}" != "0 0" ]; then
   echo " !     Failed to install dependencies with npm"
   exit 1

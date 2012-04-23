@@ -172,6 +172,10 @@ source $VIRTUALENV_LOC/bin/activate
 #puts-step "Installing dependencies using Pip version $(pip --version | awk '{print $2}')"
 #pip install --use-mirrors -r requirements.txt --src ./.heroku/src | indent
 
+echo "REQUIREMENTS_PATH = $REQUIREMENTS_PATH"
+echo "GITHUB_REQUIREMENTS_PATH = $GITHUB_REQUIREMENTS_PATH"
+echo "NPM_REQUIREMENTS_PATH = $NPM_REQUIREMENTS_PATH"
+
 if [ $REQUIREMENTS_PATH ] && [ -f $REQUIREMENTS_PATH ]; then
   pip install --use-mirrors -r $REQUIREMENTS_PATH --src ./.heroku/src | indent
 fi

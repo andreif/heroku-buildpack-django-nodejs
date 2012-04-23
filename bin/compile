@@ -80,17 +80,17 @@ if [ -f requirements.txt ]; then
     PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --use-mirrors -r requirements.txt | indent
 fi
 
-if [ $REQUIREMENTS_PATH && -f $REQUIREMENTS_PATH ]; then
+if [ $REQUIREMENTS_PATH ] && [ -f $REQUIREMENTS_PATH ]; then
     echo "-----> Installing dependencies using pip version $(bin/pip --version | awk '{print $2}')"
     PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --use-mirrors -r $REQUIREMENTS_PATH | indent
 fi
 
-if [ -f requirements.github ]; then
+if [ $GITHUB_REQUIREMENTS_PATH ] && [ -f $GITHUB_REQUIREMENTS_PATH ]; then
     echo "-----> Cloning GitHub repos downloader"
     git clone git@github.com:andreif/pyhub.git ./src/pyhub | indent
 
     echo "-----> Downloading GitHub repos"
-    python ./src/pyhub/pyhub/pyhub.py requirements.github requirements.local | indent
+    python ./src/pyhub/pyhub/pyhub.py $GITHUB_REQUIREMENTS_PATH requirements.local | indent
 
     echo "-----> Installing downloaded repos"
     PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --no-dependencies -r requirements.local | indent
@@ -114,7 +114,7 @@ for dir in $VIRTUALENV_DIRS; do
   cp -R $dir $CACHE_DIR/
 done
 
-if [ -f requirements.npm ]; then
+if [ $NPM_REQUIREMENTS_PATH ] && [ -f $NPM_REQUIREMENTS_PATH ]; then
     echo "-----> Installing nodejs, npm, and packages"
     $BIN_DIR/compile_nodejs $1 $2
 fi

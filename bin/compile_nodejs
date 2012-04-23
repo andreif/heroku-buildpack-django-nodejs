@@ -69,7 +69,7 @@ fi
 # install dependencies with npm
 echo "-----> Installing dependencies with npm $NPM_VERSION"
 cd $BUILD_DIR
-for pkg in $(cat requirements.npm); do
+for pkg in $(cat $NPM_REQUIREMENTS_PATH); do
     # TODO: read line by line and skip empty
     if [[ ! $(echo pkg) = '#'* ]]; then
         HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js install $pkg 2>&1 | indent

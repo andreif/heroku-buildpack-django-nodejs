@@ -26,6 +26,17 @@ PROJECT=$(dirname $SETTINGS_FILE)
 
 echo "Injecting code into $SETTINGS_FILE to read from DATABASE_URL" | indent
 
+if [ $DJANGO_SETTINGS_PATH ]; then
+    if [ -f $DJANGO_SETTINGS_PATH ]; then
+        SETTINGS_FILE=$DJANGO_SETTINGS_PATH
+    elif [[ 1 ]]; then
+        echo "====> Error: Settings file not found"
+        echo $DJANGO_SETTINGS_PATH
+        echo $(pwd)
+        echo $(ls -la)
+    fi
+fi
+
 cat >>$SETTINGS_FILE <<EOF
 
 import os

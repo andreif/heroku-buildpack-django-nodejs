@@ -75,17 +75,26 @@ except:
 EOF
 fi
 
-echo "-----> Installing dependencies using pip version $(bin/pip --version | awk '{print $2}')"
-PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --use-mirrors -r requirements.txt | indent
+if [ -f requirements.txt ]; then
+    echo "-----> Installing dependencies using pip version $(bin/pip --version | awk '{print $2}')"
+    PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --use-mirrors -r requirements.txt | indent
+fi
 
-echo "-----> Cloning GitHub repos downloader"
-git clone git@github.com:andreif/pyhub.git ./src/pyhub | indent
+if [ $REQUIREMENTS_PATH && -f $REQUIREMENTS_PATH ]; then
+    echo "-----> Installing dependencies using pip version $(bin/pip --version | awk '{print $2}')"
+    PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --use-mirrors -r $REQUIREMENTS_PATH | indent
+fi
 
-echo "-----> Downloading GitHub repos"
-python ./src/pyhub/pyhub/pyhub.py requirements.github requirements.local | indent
+if [ -f requirements.github ]; then
+    echo "-----> Cloning GitHub repos downloader"
+    git clone git@github.com:andreif/pyhub.git ./src/pyhub | indent
 
-echo "-----> Installing downloaded repos"
-PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --no-dependencies -r requirements.local | indent
+    echo "-----> Downloading GitHub repos"
+    python ./src/pyhub/pyhub/pyhub.py requirements.github requirements.local | indent
+
+    echo "-----> Installing downloaded repos"
+    PIP_DOWNLOAD_CACHE=$PIP_DOWNLOAD_CACHE bin/pip install --no-dependencies -r requirements.local | indent
+fi
 
 # remove dir
 rm -rf ./src
